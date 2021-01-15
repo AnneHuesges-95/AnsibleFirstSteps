@@ -1,19 +1,25 @@
 ---
 
-- hosts: all
+- hosts: webserver
   become: true
   tasks:
 
-  - name: update repository index
+  - name: install apache2 and php support for Ubuntu
+    tags: test
     apt:
-      update_cache: yes
-
-  - name: install apache2
-    apt:
-      name: apache2
+      name: 
+        - apache2
+        - libapache2-mod-php
       state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
 
-  - name: add php support for apache
+- hosts: webserver
+  become: true
+  tasks:
+
+  - name: install mariadb for Ubuntu
+    tags: test2
     apt:
-      name: libapache2-mod-php
+      name: mariadb-server
       state: latest
