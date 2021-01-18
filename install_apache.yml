@@ -4,7 +4,7 @@
   become: true
   tasks:
 
-  - name: install apache2 and php support for Ubuntu
+   - name: install apache2 and php support for Ubuntu
     tags: test
     apt:
       name: 
@@ -14,20 +14,26 @@
       update_cache: yes
     when: ansible_distribution == "Ubuntu"
 
-  - name: copy default hmtl2 file
-    copy: 
-      src: default_site.html 
-      dest: /var/www/html/index.html
-      owner: root
-      group: root
-      mode: '0644'
-
-- hosts: webserver
+- hosts: all
   become: true
   tasks:
 
-  - name: install mariadb for Ubuntu
-    tags: test2
-    apt:
-      name: mariadb-server
-      state: latest
+  - name: create simone user
+    tags: always
+    user:
+      name: simone
+      groups: root
+
+  - name: add ssh for simone
+    authorized_key:
+      user: simone
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPobBtCk0yZ0t7G1RhdjXhYjmaIRcU4cbpHRiphKAmVI ansible"
+
+
+  - name: add sudoer file for simone
+    copy:
+      src: sudoer_simone
+      dest: /etc/sudoers.d/simone
+      owner: root
+      group: root
+      mode: 0440

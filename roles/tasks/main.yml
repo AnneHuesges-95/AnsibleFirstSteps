@@ -1,0 +1,4 @@
+- name: create mariadb server
+  apt:
+    name: mariadb-server
+    state: latest
